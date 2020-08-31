@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load study_helper_app_tags %}
+{% load tz %}
+
+{% block title %}
+    Study Helper
+{% endblock %}
+
+{% block content %}
+    <div class="action-bar container mt-5">
+        <div class="row">
+            <div class="actions">
+                <a href="{% url 'create_cart' %}" class="btn btn-secondary">Добавить карточку</a>
+                {% if practice_cart %}
+                    <a href="{% url 'practice' practice_cart %}" class="btn btn-secondary">Начать Практику<span
+                            class="badge badge-light">{{ practice_count }}</span></a>
+                {% endif %}
+            </div>
+
+            <div class="search ml-auto">
+                <form method="get">
+                    {{ search_form }}
+                    <button type="submit" class="btn btn-outline-primary">Найти</button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <table class="table table-striped mt-4">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Категория
+                <button type="button" class="btn btn-link btn-sm" data-toggle="modal"
+                        data-target="#createCategoryModal">+
+                </button>
+            </th>
+            <th scope="col">Вопрос</th>
+            <th scope="col">След. повторение</th>
+            <th scope="col">Редактировать</th>
+            <th scope="col">Удалить</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cart in cart_list %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ cart.category }}</td>
+                <td>{{ cart.question }}</td>
+                {% timezone "Europe/Moscow" %}
+                    <td>{{ cart.repeat_date|date }}</td>
+                {% endtimezone %}
+                <td><a href="{% url 'update_cart' cart.id %}" class="btn btn-outline-secondary">Редактировать</a>
+                </td>
+                <td>
+                    <form action="{% url 'delete_cart' cart.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'study_helper_app/category_modal.html' %}
+{% endblock %}

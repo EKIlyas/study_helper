@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load study_helper_app_tags %}
+
+{% block title %}
+    Practice
+{% endblock %}
+
+{% block content %}
+    <h2>Осталось повторить(вместе с этой): {{ practice_count }}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="btn-group mt-4" role="group">
+            <button type="submit" name="stay_stage" value="stay" class="btn btn-outline-dark">Не Помню</button>
+            <button type="submit" name="next_stage" value="next" class="btn btn-outline-dark">Уверенно Ответил</button>
+        </div>
+    </form>
+
+
+    <div class="card border-dark mb-3 mt-4">
+        <div class="card-header">{{ cart.category }}</div>
+        <div class="card-body text-dark">
+            <p class="card-text">{{ cart.question }}</p>
+        </div>
+    </div>
+
+    <button id="answer_button" type="button" class="btn btn-secondary" onclick="show_answer();">Показать Ответ
+    </button>
+
+    <div id="answer_block" class="card border-dark mb-3 mt-4" style="visibility: hidden">
+        <div class="card-body text-dark">
+            <p class="card-text">{{ cart.answer }}</p>
+        </div>
+    </div>
+
+    <script>
+        function show_answer() {
+            document.getElementById('answer_block').style.visibility = 'visible';
+            document.getElementById('answer_button').style.visibility = 'hidden';
+        }
+    </script>
+{% endblock %}
