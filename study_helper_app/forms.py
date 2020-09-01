@@ -21,6 +21,7 @@ class CartForm(forms.ModelForm):
             categories = Category.objects.filter(session_id=session_id)
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = categories
+
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Fieldset(
@@ -43,6 +44,11 @@ class CartForm(forms.ModelForm):
     class Meta:
         model = Cart
         fields = ['question', 'answer', 'category', 'repeat_date']
+        widgets = {
+            'answer': forms.Textarea(),
+            'repeat_date': forms.DateInput(
+                attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
+        }
 
 
 class CategoryForm(forms.ModelForm):
