@@ -46,8 +46,6 @@ class CartForm(forms.ModelForm):
         fields = ['question', 'answer', 'category', 'repeat_date']
         widgets = {
             'answer': forms.Textarea(),
-            'repeat_date': forms.DateInput(
-                attrs={'class': 'form-control', 'placeholder': 'Select a date', 'type': 'date'}),
         }
 
 
