@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load tz %}
+
+{% block title %}
+    Настройки
+{% endblock %}
+
+{% block content %}
+    {% get_current_timezone as TIME_ZONE %}
+    <p>Текущий: {{ TIME_ZONE }}</p>
+    <form action="{% url 'settings' %}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success">Сохранить</button>
+    </form>
+{% endblock %}

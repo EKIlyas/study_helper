@@ -1,5 +1,6 @@
 import time
 
+import pytz
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML, Div
 from django import forms
@@ -67,3 +68,8 @@ class SearchForm(forms.Form):
         results = Cart.objects.annotate(search=SearchVector('category__name', 'question'), ).filter(search=query)
         results = results.filter(author=user) if user.is_authenticated else results.filter(session_id=session_id)
         return results
+
+
+class TimezoneForm(forms.Form):
+    TIME_ZONES = [(tz.lower(), tz) for tz in pytz.common_timezones]
+    timezone = forms.ChoiceField(choices=TIME_ZONES, label='Часовой Пояс', initial='europe/moscow')

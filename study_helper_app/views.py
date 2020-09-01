@@ -4,11 +4,11 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, AccessMixin
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity, SearchQuery, SearchRank
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, TemplateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, TemplateView, FormView
 from django.views.generic.base import View, RedirectView
 
 from .models import Category, Cart
-from .forms import CartForm, CategoryForm, SearchForm
+from .forms import CartForm, CategoryForm, SearchForm, TimezoneForm
 
 
 # Main Page
@@ -16,8 +16,6 @@ class CartListView(ListView):
     model = Cart
     template_name = 'study_helper_app/home.html'
     search_form = SearchForm
-
-    # paginate_by = 10
 
     def get_context_data(self, *, object_list=None, **kwargs):
         user = self.request.user
@@ -181,4 +179,16 @@ class RegistrationView(CreateView):
         password = form.cleaned_data.get('password1')
         auth_user = authenticate(username=username, password=password)
         login(self.request, auth_user)
+        return form_valid
+
+
+class SettingsView(FormView):
+    template_name = 'settings.html'
+    form_class = TimezoneForm
+    success_url = reverse_lazy('settings')
+
+    def form_valid(self, form):
+        form_valid = super().form_valid(form)
+        cd_timezone = form.cleaned_data.get('timezone')
+        self.request.session['django_timezone'] = cd_timezone
         return form_valid
