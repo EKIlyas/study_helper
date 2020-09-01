@@ -7,8 +7,6 @@
 {% endblock %}
 
 {% block content %}
-    {% get_current_timezone as TIME_ZONE %}
-    <h2>{{ TIME_ZONE }}</h2>
     <h2 class="mt-4">Добавление карточки</h2>
     {% timezone 'Europe/Moscow' %}
     {% crispy form form.helper %}
