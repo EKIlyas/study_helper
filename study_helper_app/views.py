@@ -154,7 +154,9 @@ class PracticeView(AccessMixin, DetailView):
 class CategoryCreateView(CreateView):
     template_name = 'study_helper_app/home.html'
     form_class = CategoryForm
-    success_url = reverse_lazy('main')
+
+    def get_success_url(self):
+        return self.request.headers['referer']
 
     # не уверен правильно ли так писать
     def form_valid(self, form):
