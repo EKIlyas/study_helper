@@ -76,18 +76,17 @@ class Cart(models.Model):
     @staticmethod
     def next_stage(pk):
         current_cart = Cart.objects.get(id=pk)
-        next_stages = Stage.objects.filter(mode__category=current_cart.category, sequence=current_cart.stage + 1)
-        if len(next_stages) == 0:
+        try:
+            next_stage = Stage.objects.get(mode__category=current_cart.category, sequence=current_cart.stage + 1)
+            current_cart.stage += 1
+        except Stage.DoesNotExist:
             next_stage = Stage.objects.get(mode__category=current_cart.category, sequence=current_cart.stage)
-        else:
-            next_stage = next_stages[0]
         increment_date = datetime.timedelta(
             minutes=next_stage.interval_minute,
             hours=next_stage.interval_hour,
             days=next_stage.interval_day
         )
         current_cart.repeat_date = timezone.now() + increment_date
-        current_cart.stage += 1
         current_cart.save()
 
     @staticmethod
